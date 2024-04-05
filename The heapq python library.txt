@@ -1,0 +1,29 @@
+The heapq python library is a library designed to implement a Heap Queue algorithm natively in python. This means that the data structure can be represented as a binary tree where the value of every parent node is less than or equal to the value of the two child nodes. This implementation is different from a textbook approach, as it usalizes zero based indexing and the pop method returns the smallest item as it is a min-heap approach rather than a max-heap approach. The methods of the heapq library are as explained:
+
+	heapq.heappush(heap, item) will push the given item onto the given heap.
+		Best case it will be given a large number and just has to append to the end of the heap.
+		Worst case it is given the smallest number, and has to re-heap the entire heap.
+		Benchmark: given heap of n items, give a known small, known big, and known middle value to add into heap and see the difference in time.
+		1.) Yes, the theoretical does mostly match the empirical run time, with the little discrepancies that do appear could be due to stuff going on in the lib like memory allocation that we aren't seeing
+		2.) Yes, there is a noticeable difference, with known smaller taking the longest, known smallest being the shortest and random somewhere in between. This is because it is cheaper to add a new "node" than to restructure the whole or partial tree. 
+
+	heapq.heappop(heap) will pop and return the smallest item from the heap, maintaining the heap invariant.
+		Best case it has a node with no children that can slide down into the root, or no children and leave an empty heap.
+		Worst case it has to re-heap half the heap as it chose one node to be the root and had to reintegrate the rest of the heap back into the heap.
+		Benchmark: check difference in time between a single element heap, multi element heap, and gigantic heap.
+		1.) Mostly, the theoretical does somewhat match the empirical run time, with the little discrepancies that do appear could be due to stuff going on in the lib like memory allocation that we aren't seeing or other processes running in the background affecting CPU.
+		2.) There is a noticable difference, but there is some weird errors that make 1000/10000 faster than 1/10 or 100000000 being faster than 10000000, but taking those out it does seems to follow an increasing trend. Which makes sense as there is constantly more items to re-heap with removing the root node.
+
+	heapq.heapify(list) will turn the provided list into a heap in place, in linear time.
+		Best case it is given one element, as that would just become the new root
+		Worst case it has to iterate through the given list and add to the heap in order.
+		Benchmark: give a single sorted list to heapq.heapify, a randomly/non sorted list to heapq.heapify, and a reverse sorted list to heapq.heapify and compare time difference. 
+		1.) Mostly, the theoretical does somewhat match the empirical run time, with the little discrepancies that do appear could be due to stuff going on in the lib like memory allocation that we aren't seeing or other processes running in the background affecting CPU.
+		2.) There is a slightly noticable difference between worst and best, but it seems to reverse what is expected, but that could be the fact that the heap is reverse what is normally implemented and we were thinking in reverse. This does make sense though, as the time goes up linearly with the number of items, and does follow a pattern, not really having a difference between worst and best.
+
+	heapq.heapreplace(heap, item) will pop and return an item from the heap, and push on the given item, more efficient than a chained call of heapq.heappop and heapq.heappush.
+		Best case would be a singular root node, as the item would be added as a child, then immediately become the new root.
+		Worst case it is given a non root worthy node and has to do a full remove followed by a full add.
+		Benchmark: Single element list with known larger vs a single element list with known smaller and same with multi-element lists and gigantic element lists.
+		1.) Mostly, the theoretical does somewhat match the empirical run time, with the little discrepancies that do appear could be due to stuff going on in the lib like memory allocation that we aren't seeing or other processes running in the background affecting CPU.
+		2.) There is a slightly noticable difference between worst and best, but it seems to reverse what is expected, but that could be the fact that the heap is reverse what is normally implemented and we were thinking in reverse. This does make sense, as the re computing function doesn't have to move much, once established.
